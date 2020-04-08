@@ -4,7 +4,7 @@ const double eps = 1e-8; // double precision
 
 inline int sig(double x) { return (x > eps) - (x < -eps); }
 
-inline bool equal(double a, double b)  // ç”¨äºåˆ¤æ–­ä¸¤ä¸ªæµ®ç‚¹æ•°æ˜¯å¦ç›¸ç­‰ã€‚ç²¾åº¦ä¸ºeps.
+inline bool equal(double a, double b) // ÓÃÓÚÅĞ¶ÏÁ½¸ö¸¡µãÊıÊÇ·ñÏàµÈ¡£¾«¶ÈÎªeps.
 {
     if ((a - b) > -eps && (a - b) < eps)
         return true;
@@ -12,41 +12,47 @@ inline bool equal(double a, double b)  // ç”¨äºåˆ¤æ–­ä¸¤ä¸ªæµ®ç‚¹æ•°æ˜¯å¦ç›¸ç­
         return false;
 }
 
-Point::Point(double x_, double y_) // ç”¨äºåˆå§‹åŒ–Point
+Point::Point(double x_, double y_) // ÓÃÓÚ³õÊ¼»¯Point
 {
     x = x_;
     y = y_;
 }
 
-Point::Point() // ç”¨äºä¸´æ—¶ç”Ÿæˆä¸€ä¸ªPoint
+Point::Point(string x_, string y_)
+{
+    x = atof(x_.c_str());
+    y = atof(y_.c_str());
+}
+
+Point::Point() // ÓÃÓÚÁÙÊ±Éú³ÉÒ»¸öPoint
 {
     x = 0;
     y = 0;
 }
 
-string Point::Str() // ç”¨äºè¾“å‡ºç‚¹çš„åæ ‡ï¼ˆè°ƒè¯•ç”¨ï¼‰
+string Point::Str() // ÓÃÓÚÊä³öµãµÄ×ø±ê£¨µ÷ÊÔÓÃ£©
 {
     string temp = "( " + to_string(x) + " , " + to_string(y) + " )";
     return temp;
 }
 
 /*
-Pointå¯¹æ¯”åŸåˆ™ï¼š
-    æ¨ªåæ ‡å¤§çš„ç‚¹æ›´å¤§
-    æ¨ªåæ ‡ä¸€æ ·çš„ç‚¹ï¼Œçºµåæ ‡å¤§çš„ç‚¹æ›´å¤§
+Point¶Ô±ÈÔ­Ôò£º
+    ºá×ø±ê´óµÄµã¸ü´ó
+    ºá×ø±êÒ»ÑùµÄµã£¬×İ×ø±ê´óµÄµã¸ü´ó
 */
 bool Point::operator<(const Point &other) const
 {
-    if (this->x < other.x) // è‡ªå·±æ¨ªåæ ‡æ›´å°
+    if (this->x < other.x) // ×Ô¼ººá×ø±ê¸üĞ¡
         return true;
-    else if (this->x == other.x) //æ¨ªåæ ‡ç›¸ç­‰æ¯”è¾ƒçºµåæ ‡
+    else if (this->x == other.x) //ºá×ø±êÏàµÈ±È½Ï×İ×ø±ê
     {
-        if (this->y < other.y) // è‡ªå·±çºµåæ ‡æ›´å°
+        if (this->y < other.y) // ×Ô¼º×İ×ø±ê¸üĞ¡
         {
             return true;
         }
     }
-    return false; // å…¶ä»–æƒ…å†µä¸‹ï¼Œè‡ªå·±éƒ½æœªå¿…å°
+    return false; // ÆäËûÇé¿öÏÂ£¬×Ô¼º¶¼Î´±ØĞ¡
 }
 
 bool Point::operator>(const Point &other) const
@@ -62,82 +68,273 @@ bool Point::operator>(const Point &other) const
             return true;
         }
     }
+    return false;
 }
 
-bool Point::operator==(const Point &other) const // åˆ¤æ–­ä¸¤åæ ‡æ˜¯å¦ç›¸ç­‰ï¼ˆè¡¥å¿è¯¯å·®ï¼‰
+bool Point::operator==(const Point &other) const // ÅĞ¶ÏÁ½×ø±êÊÇ·ñÏàµÈ£¨²¹³¥Îó²î£©
 {
     return (equal(this->x, other.x) && equal(this->y, other.y));
 }
 
-Point Point::operator-(const Point &other) const // é‡è½½å‡æ³•è¿ç®—
+Point Point::operator-(const Point &other) const // ÖØÔØ¼õ·¨ÔËËã
 {
     Point temp(this->x - other.x, this->y - other.y);
     return temp;
 }
 
-double Point::operator*(const Point &other) const // é‡è½½ç‚¹ç§¯
+double Point::operator*(const Point &other) const // ÖØÔØµã»ı
 {
     return x * other.x + y * other.y;
 }
 
-double Point::operator^(const Point &other) const // é‡è½½å‰ç§¯ï¼ˆå¯ä»¥ç†è§£ä¸ºzæ–¹å‘åæ ‡å…¨ä¸º0çš„å‘é‡å‰ç§¯ï¼Œç»“æœçœ‹åšä¸€ç»´ï¼‰
+double Point::operator^(const Point &other) const // ÖØÔØ²æ»ı£¨¿ÉÒÔÀí½âÎªz·½Ïò×ø±êÈ«Îª0µÄÏòÁ¿²æ»ı£¬½á¹û¿´×öÒ»Î¬£©
 {
     return x * other.y - y * other.x;
 }
 
-Line::Line(double x1, double x2, double y1, double y2) // ç”¨äºåˆå§‹åŒ–ä¸€æ¡çº¿
+Line::Line(double x1, double y1, double x2, double y2) // ÓÃÓÚ³õÊ¼»¯Ò»ÌõÏß
 {
-    from = &Point(x1, y1);
-    to = &Point(x2, y2);
-}
+    Point *from_ = new Point(x1, y1);
+    Point *to_ = new Point(x2, y2);
 
-Line::Line(Point* from_, Point* to_) // ç”¨äºåˆå§‹åŒ–ä¸€æ¡çº¿ï¼Œç”¨äºåˆ¤æ–­ç‚¹æ˜¯å¦åœ¨å¤šè¾¹å½¢å†…éƒ¨
-{
     from = from_;
     to = to_;
 }
 
-string Line::Str() // ç”¨äºæ‰“å°æŸç‚¹åæ ‡ï¼ˆè°ƒè¯•ç”¨ï¼‰
+Line::Line(string x1, string y1, string x2, string y2)
 {
-    string temp = "from " + from->Str() + " to " + to->Str();
+    Point *from_ = new Point(atof(x1.c_str()), atof(y1.c_str()));
+    Point *to_ = new Point(atof(x2.c_str()), atof(y2.c_str()));
+
+    from = from_;
+    to = to_;
+}
+
+Line::Line(Point from_, Point to_) // ÓÃÓÚ³õÊ¼»¯Ò»ÌõÏß£¬ÓÃÓÚÅĞ¶ÏµãÊÇ·ñÔÚ¶à±ßĞÎÄÚ²¿
+{
+    from = &from_;
+    to = &to_;
+}
+
+string Line::Str() // ÓÃÓÚ´òÓ¡Ä³µã×ø±ê£¨µ÷ÊÔÓÃ£©
+{
+    string temp = from->Str() + " --> " + to->Str();
     return temp;
 }
 
-void Line::Swap() // ç”¨äºäº¤æ¢fromå’Œto
+void Line::Swap() // ÓÃÓÚ½»»»fromºÍto
 {
-    Point* temp = from;
+    Point *temp = from;
     from = to;
     to = temp;
     return;
 }
 
-Polygon::Polygon(vector<Line> lines_) // å¤šè¾¹å½¢åˆå§‹åŒ–ï¼ˆå¹¶åˆ¤æ–­å¤šè¾¹å½¢ç±»å‹ï¼‰
+double Line::operator^(const Line &b) const
 {
-    lines = lines_;
-    SortLines();
+    return (*(this->to) - *(this->from)) ^ (*b.to - *b.from);
 }
 
-bool Polygon::CheckCross(Line a, Line b) const
+Polygon::Polygon(vector<Line> *lines_) // ¶à±ßĞÎ³õÊ¼»¯£¨²¢ÅĞ¶Ï¶à±ßĞÎÀàĞÍ£©
 {
-    for (int i = 0; i < lines.size(); i++)
+    lines = *lines_;
+}
+
+Polygon::Polygon()
+{
+    NULL;
+}
+
+bool Polygon::sortlines()
+// ÓÃÓÚÑ°ÕÒ¶Ëµã
+{
+    size_t lines_index = 0;                                              // ÉèÖÃÏß¶ÎË÷Òı
+    Point *last = NULL;                                                  //
+    bool flag = 0;                                                       // ÓÃÓÚ±ê¼ÇÊÇ·ñÍê³ÉÆ¥Åä
+    for (lines_index = 0; lines_index + 1 < lines.size(); lines_index++) // Ö»Òª
     {
-        for (int j = i + 1; j < lines.size(); j++)
+        last = lines[lines_index].to; // ÒÔlines[0].to×÷ÎªÆğµã²é¿´ÊÇ·ñ¿ÉÒÔ½«ËùÓĞÏß´®ÆğÀ´
+        flag = 0;
+        for (int target = lines_index + 1; target < lines.size(); target++) // ×¢Òâlines_index½ØÖ¹µ½µ¹ÊıµÚ¶şÎ»
         {
-            double d1, d2, d3, d4;
-            d1 = (lines[i].to - lines[i].from) ^ (lines[j].from - lines[i].from); // 
-            d2 = (lines[i].to - lines[i].from) ^ (lines[j].to - lines[i].from);
-            d3 = (lines[j].to - lines[j].from) ^ (lines[i].from - lines[j].from);
-            d4 = (lines[j].to - lines[j].from) ^ (lines[i].to - lines[i].from);
-            
-            
+            if (*(lines[target].from) == *last) // Èç¹ûÆ¥Åäµ½ÁËfrom
+            {
+                swap(lines[target], lines[lines_index + 1]); // ½«target¶ÔÓ¦µÄÏßºÍlines_indexÏÂÒ»¸ö»¥»»
+                flag = 1;
+            }
+            else if (*(lines[target].to) == *last) // Èç¹ûtoºÍlastÆ¥ÅäÉÏ
+            {
+                lines[target].Swap();                        // Ê×ÏÈĞèÒª»¥»»fromºÍto
+                swap(lines[target], lines[lines_index + 1]); // Æä´Î½«¸ÃÌõÏß·ÅÔÚlines_indexÏÂÒ»¸ö
+                flag = 1;
+            }
         }
+        if (!flag) // Î´Íê³ÉÆ¥Åä£¬ËµÃ÷ÊäÈëÊı¾İºÜ¿ÉÄÜÓĞÎó
+        {
+            cout << "Çë¼ì²éÄúµÄ¶à±ßĞÎÎÄ¼şÊäÈëÊÇ·ñÓĞÎó£¡£¡" << endl;
+            return false;
+        }
+    }
+    assert(*(lines[0].from) == *(lines.back().to)); // Ó¦µ±Ê×Î²Ïà½Ó
+    return true;
+}
+
+bool Polygon::checkcross()
+{
+    if (lines.size() < 3) // ´ËÊ±²»¿ÉÄÜ×é³É¶à±ßĞÎ
+    {
+        cout << "Ö»ÊäÈëÁË" << lines.size() << "Ìõ±ß£¬ÎŞ·¨¹¹³É¶à±ßĞÎ" << endl;
+        return false;
+    }
+    else
+    {
+        for (size_t i = 0; i + 2 < lines.size(); i++) // ±éÀúËùÓĞ¶Ô±ß
+        {
+            if (CheckCross(lines[i], lines[i + 2])) // Èç¹ûÓĞ½»²æ
+            {
+                cout << "ÄúÊäÈëµÄ±ß£º" << lines[i].Str() << "ºÍ" << lines[i + 2].Str() << "Ö®¼äÓĞ½»²æ" << endl;
+                return false;
+            }
+            else
+                NULL;
+        }
+    }
+    return true;
+}
+
+void Polygon::findbound() // ²éÕÒ¶à±ßĞÎµÄÍâ°ü¾ØĞÎ£¨´ËÊ±Ã¿Ìõ±ßµÄËùÓĞfromÕıºÃ±éÀúÁËËùÓĞµã
+{
+    bound_yu = lines[0].from->y;  // yu, yd ¶ÔÓ¦ÉÏ½çÏÂ½ç
+    bound_yd = lines[0].from->y;
+    bound_xl = lines[0].from->x; // xl, xr ¶ÔÓ¦×ó½çÓÒ½ç
+    bound_xr = lines[0].from->x;
+    for (size_t i = 0; i < lines.size(); i++) // ±éÀúËùÓĞ±ß£¬Ñ°ÕÒ×î´óÖµ
+    {
+        if (bound_yu < lines[i].from->y)
+            bound_yu = lines[i].from->y;
+        if (bound_yd > lines[i].from->y)
+            bound_yd = lines[i].from->y;
+        if (bound_xl > lines[i].from->x)
+            bound_xl = lines[i].from->x;
+        if (bound_xr < lines[i].from->x)
+            bound_xr = lines[i].from->x;
     }
 }
 
-void Polygon::SortLines()
-// ç”¨äºå¯»æ‰¾ç«¯ç‚¹
+bool Polygon::checkconv() // ¼ì²éÔ­Ôò£¬´ÓµÚÒ»Ìõ±ß¿ªÊ¼£¬²é¿´ÏÂÒ»Ìõ±ßºÍ´Î±ßµÄ²æ»ıÊÇ·ñÍ¬ºÅ
 {
-    for (int i = 0; i < lines.size(); i++)
+    double temp = lines.back() ^ lines[0]; // ½«×îºóÒ»¸öºÍµÚÒ»¸ö×ö²æ»ı
+    for (size_t i = 0; i + 1 < lines.size(); i++)
     {
+        if (temp * (lines[i] ^ lines[i + 1]) < 0) // Èç¹û²æ»ıÒìºÅ£¬ËµÃ÷·ÇÍ¹¶à±ßĞÎ
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Polygon::in(Point point) // ¼ì²éµãÊÇ·ñÔÚ¶à±ßĞÎÄÚ²¿
+{
+    /***************** ¼ì²éÊÇ·ñÔÚ¶à±ßĞÎÉÏ ******************/
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        if (equal(point.x, lines[i].from->x) || equal(point.y, lines[i].from->y)) // Èç¹ûµãÔÚ½»µã´¦
+        {
+            cout << "µãÔÚ±ßÉÏ" << endl;
+            return false;
+        }
+        else
+        {
+            double d1 = (point - *lines[i].from) ^ (*lines[i].to - *lines[i].from); // ×Ôfrom³ö·¢£¬ÏòpointµÄÊ¸Á¿ x ÏòtoµÄÊ¸Á¿
+            double d2 = (point - *lines[i].from) ^ (*lines[i].from - *lines[i].to); // ×Ôto³ö·¢£¬ÏòpointµÄÊ¸Á¿ x ÏòfromµÄÊ¸Á¿
+            cout << d1 << ' ' << d2 << endl;
+            if (equal(d1, 0.0) && equal(d2, 0.0)) // ËµÃ÷ÔÚ±ß*ËùÔÚµÄÖ±Ïß*ÉÏ
+            {
+                double tempx = (point.x - lines[i].from->x) * (point.x - lines[i].to->x);
+                double tempy = (point.y - lines[i].from->y) * (point.y - lines[i].to->y);
+                if (tempx > 0 || tempy > 0) // ÔÚÍ¬Ò»ÌõÖ±ÏßÉÏ£¬µ«ÔÚ¸ÃÏß¶ÎÖ®Íâ
+                {
+                    // ×¢Òâ¶ÔÓÚÍ¹¶à±ßĞÎ£¬´ËÊ±ÒÑ¾­¿ÉÒÔµãÔÚ¶à±ßĞÎÍâ£¬µ«ÊÇ¶ÔÓÚ°¼¶à±ßĞÎ£¬»¹ĞèÒªÅĞ¶ÏÊÇ·ñÄÜ´ÓÁíÒ»¸ö·½ÏòÉÏÕÒµ½½»µã
+                    Line radial(*lines[i].from, point);
+                    for (size_t j = 0; j < lines.size(); j++)
+                    {
+                        if (i == j) continue;
+                        
+                        if (CheckCross(radial, lines[j])) // ´ÓÁíÒ»¸ö·½ÏòÉÏÅĞ¶ÏºÍÆäËûµÄ±ßÊÇ·ñÓĞ½»µã
+                        {
+                            cout << "µãÔÚ¶à±ßĞÎÄÚ²¿" << endl;
+                            return true;
+                        }
+                    }
+                    // ¶ÔÓÚÏà·´·½ÏòÉÏÃ»ÓĞ½»µãµÄ£¬ËµÃ÷ÔÚÍâ²¿
+                    cout << "µãÔÚ¶à±ßĞÎÍâ²¿" << endl;
+                    return false;
+                }
+
+            }
+        }
+    }
+
+    /***************** ¼ì²éÊÇ·ñºÍ¶à±ßĞÎ½»µãÊıÁ¿ ******************/
+
+    Point to(bound_xr + 1, point.y);          // ĞÂ½¨Ò»¸öµã£¬ÓëÅĞ¶ÏµÄµãÆ½ĞĞ£¬ÇÒÔÚÍâ°ü¾ØĞÎµÄÍâ±ß£¨³äµ±ÉäÏßµÄ¡°Ä©Î²¡±£©
+    Line radial(point, to);                   // ĞÂ½¨Ò»¸öÉäÏß
+    int count = 0;                            // ¼ÆÊıÆ÷
+    for (size_t i = 0; i < lines.size(); i++) // ¶ÔÓÚÃ¿Ò»Ìõ±ß£¬±éÀú²é¿´ÉäÏßÊÇ·ñ´©¹ı¶à±ßĞÎ
+    {
+        if (CheckCross(radial, lines[i])) // Èç¹û½»²æ
+        {
+            count++;
+        }
+    }
+
+    if (count >= 2) //¼«¶ËÇé¿ö£¬´ËÊ±ËµÃ÷¸ÃÉäÏßÕıºÃ½»ÔÚÁËÁ½Ìõ±ßµÄ½»µã
+    {
+        cout << "µã²»ÔÚ¶à±ßĞÎµÄÄÚ²¿" << endl;
+        return false; // ²»ÔÚ
+    }
+    else
+    {
+        cout << "µãÔÚ¶à±ßĞÎµÄÄÚ²¿" << endl;
+        return true;
+    }
+}
+
+string Polygon::Str()
+{
+    string temp;
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        temp += lines[i].Str() + "\n";
+    }
+    return temp;
+}
+
+string Polygon::showbound()
+{
+    string temp = "x: " + to_string(bound_xl) + "<--->" + to_string(bound_xr) + "\ny:" + to_string(bound_yd) + "<--->" + to_string(bound_yu) + '\n';
+    return temp;
+}
+
+bool CheckCross(Line a, Line b) // ²é¿´Á½ÌõÏßÊÇ·ñÏà½»£¨²»¹æ·¶Ïà½»Ò²Ëã
+{
+    double p1 = (*a.to - *a.from) ^ (*b.from - *a.from);
+    double p2 = (*a.to - *a.from) ^ (*b.to - *a.from);
+    double p3 = (*b.to - *b.from) ^ (*a.from - *b.from);
+    double p4 = (*b.to - *b.from) ^ (*a.to - *a.from);
+    /***************** ·Ç¹æ·¶Ïà½» ******************/
+    if (equal(p1, 0.0) || equal(p2, 0.0) || equal(p3, 0.0) || equal(p4, 0.0)) // Èç¹ûÓĞÒ»¸ö²æ³ËÎª0£¬ ËµÃ÷Îª·Ç¹æ·¶Ïà½»
+    {
+        return true;
+    }
+    /***************** ÅĞ¶Ï¹æ·¶Ïà½» ******************/
+    else if (p1 * p2 < 0 && p3 * p4 < 0) // È«²¿ÒìºÅ£¬ËµÃ÷¹æ·¶Ïà½»
+    {
+        return true;
+    }
+    else
+    {
+        return false; // ·ñÔò²»Ïà½»
     }
 }

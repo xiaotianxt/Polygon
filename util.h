@@ -10,48 +10,59 @@
 #include <time.h>
 #include <iomanip>
 #include <conio.h>
-#include <windows.h>
 #include <fstream>
+#include <regex>
 
 using namespace std;
 
 bool equal(double a, double b);
 
-class Point //å¯ä»¥å‰ä¹˜å’Œç‚¹ä¹˜
+class Point //¿ÉÒÔ²æ³ËºÍµã³Ë
 {
 public:
     double x, y;
     Point(double x_, double y_);
+    Point(string x_, string y_);
     Point();
-    string Str(); // æ‰“å°è¯¥ç‚¹çš„åæ ‡ï¼ˆè°ƒè¯•ç”¨ï¼‰
-    bool operator<(const Point &) const; // ç”¨äºæ’åˆ—åæ ‡ï¼ˆå¥½åƒæ²¡å•¥ç”¨äº†
+    string Str();                        // ´òÓ¡¸ÃµãµÄ×ø±ê£¨µ÷ÊÔÓÃ£©
+    bool operator<(const Point &) const; // ÓÃÓÚÅÅÁĞ×ø±ê£¨ºÃÏñÃ»É¶ÓÃÁË
                                          // TODO:
     bool operator>(const Point &) const;
-    bool operator==(const Point &) const; // åˆ¤æ–­ç›¸ç­‰
+    bool operator==(const Point &) const; // ÅĞ¶ÏÏàµÈ
 
-    Point operator-(const Point &) const;  // å‡æ³•
-    double operator*(const Point &)const;  // ç‚¹ç§¯
-    double operator^(const Point &) const; // äºŒç»´å‰ç§¯
+    Point operator-(const Point &) const;  // ¼õ·¨
+    double operator*(const Point &)const;  // µã»ı
+    double operator^(const Point &) const; // ¶şÎ¬²æ»ı
 };
 
 class Line
 {
 public:
-    Point* from, *to; // å› ä¸ºå¤šè¾¹å½¢æ²¡æœ‰é£å‘ï¼Œè§„å®šç”Ÿæˆçš„ç‚¹ä»å°æŒ‡å‘å¤§ï¼ˆå½“ç„¶å¦‚æœè¾“å…¥çš„ç‚¹åæ ‡ä¸€æ ·ä¸èƒ½æ”¹ç§°ä¸ºè¾¹ï¼Œåº”å½“æŠ¥é”™ï¼‰
-    Line(double, double, double, double); // åˆå§‹åŒ–
-    Line(Point*, Point*);
-    string Str(); // debugç”¨ï¼Œæ‰“å°çº¿
-    void Swap(); // äº¤æ¢fromå’Œto
+    Point *from, *to;                     // ÒòÎª¶à±ßĞÎÃ»ÓĞ·çÏò£¬¹æ¶¨Éú³ÉµÄµã´ÓĞ¡Ö¸Ïò´ó£¨µ±È»Èç¹ûÊäÈëµÄµã×ø±êÒ»Ñù²»ÄÜ¸Ä³ÆÎª±ß£¬Ó¦µ±±¨´í£©
+    Line(double, double, double, double); // ³õÊ¼»¯
+    Line(string, string, string, string);
+    Line(Point, Point);
+    string Str(); // debugÓÃ£¬´òÓ¡Ïß
+    void Swap();  // ½»»»fromºÍto
+    double operator^(const Line &b) const;
 };
 
 class Polygon
 {
     vector<Line> lines;
+    size_t type = 0;
+    double bound_yu, bound_yd, bound_xl, bound_xr;
 
 public:
-    Polygon(vector<Line> lines_);
-    void SortLines();
-    bool CheckCross(Line, Line) const;
+    Polygon(vector<Line> *lines_); // ³õÊ¼»¯
+    Polygon();
+    bool sortlines();  // ½«¶à±ßĞÎÕûÀíÎªÊ×Î²ÏàÁ¬£¨Ë³±ãÅĞ¶ÏÊÇ·ñÊ×Î²ÏàÁ¬
+    bool checkcross(); // ¼ì²é¶à±ßĞÎÊÇ·ñÓĞ½»²æ
+    void findbound();
+    bool checkconv(); // ¼ì²é¶à±ßĞÎÊÇ·ñÊÇÍâ°ü¾ØĞÎ
+    bool in(Point point);
+    string Str();
+    string showbound();
 };
 
-
+bool CheckCross(Line a, Line b);
